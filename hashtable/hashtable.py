@@ -2,14 +2,25 @@ class HashTableEntry:
     """
     Hash Table entry, as a linked list node.
     """
-
     def __init__(self, key, value):
         self.key = key
         self.value = value
         self.next = None
 
 
+'''
+1. Get bytes for the key
+2. Make up a function that returns an index for those bytes
+   * Adding the bytes
+   * Modding with the hash table size
+'''
+
+
 class HashTable:
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.storage = [None] * capacity
+
     """
     A hash table that with `capacity` buckets
     that accepts string keys
@@ -25,18 +36,13 @@ class HashTable:
         """
 
     def djb2(self, key):
-        """
-        DJB2 32-bit hash function
+        hash = 5381
+        for x in key:
+            hash = (hash * 33) + ord(x)
 
-        Implement this, and/or FNV-1.
-        """
+        return hash & 0xFFFFFFFF
 
     def hash_index(self, key):
-        """
-        Take an arbitrary key and return a valid integer index
-        between within the storage capacity of the hash table.
-        """
-        #return self.fnv1(key) % self.capacity
         return self.djb2(key) % self.capacity
 
     def put(self, key, value):
@@ -47,6 +53,8 @@ class HashTable:
 
         Implement this.
         """
+        index = self.hash_index(key)
+        self.storage[index] = value
 
     def delete(self, key):
         """
@@ -56,6 +64,8 @@ class HashTable:
 
         Implement this.
         """
+        index = self.hash_index(key)
+        self.storage[index] = None
 
     def get(self, key):
         """
@@ -65,6 +75,8 @@ class HashTable:
 
         Implement this.
         """
+        index = self.hash_index(key)
+        return self.storage[index]
 
     def resize(self):
         """
@@ -73,6 +85,7 @@ class HashTable:
 
         Implement this.
         """
+
 
 if __name__ == "__main__":
     ht = HashTable(2)
